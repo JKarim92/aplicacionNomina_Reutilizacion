@@ -1,0 +1,29 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+bin/
+obj/
+Debug/
+Release/
+
+# Rider IDE
+.idea/
+
+# Archivos temporales y de log
+*.log
+*.tmp
+*.bak
+
+# Paquetes NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# Node.js (si hay front-end)
+node_modules/
+dist/
