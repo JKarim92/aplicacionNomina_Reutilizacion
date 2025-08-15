@@ -11,17 +11,17 @@
     <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
 
     <!-- Formulario de Login -->
-    <form class="modal-content animate" action="/Acceso/Login" method="post">
+    <form class="modal-content animate" action="/Acceso/Autenticar" method="post">
         <div class="imgcontainer">
             <img src="@Url.Content("~/Content/avatar.jpg")" alt="Avatar" class="avatar" />
         </div>
 
         <div class="container">
-            <label for="uname"><b>Usuario</b></label>
-            <input type="text" placeholder="Ingrese usuario" name="uname" required>
+            <label for="usuario"><b>Usuario</b></label>
+            <input type="text" placeholder="Ingrese usuario" name="usuario" required>
 
-            <label for="psw"><b>Contraseña</b></label>
-            <input type="password" placeholder="Ingrese contraseña" name="psw" required>
+            <label for="clave"><b>Contraseña</b></label>
+            <input type="password" placeholder="Ingrese contraseña" name="clave" required>
         </div>
 
         <div class="login-section">
@@ -41,8 +41,8 @@
                 ¿No tienes cuenta? <a href="@Url.Action("Registro", "Acceso")">Regístrate aquí</a>
             </span>
         </div>
-
     </form>
+
 </div>
 
 @section scripts {
