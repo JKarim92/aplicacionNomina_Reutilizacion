@@ -1,0 +1,6 @@
+El archivo EmpleadosReutilizacion.bak se encuentra disponible aquí:
+https://ister-my.sharepoint.com/:u:/g/personal/jonathan_bernal_ister_edu_ec/EVg2H0j13zxIvOoshb55IzwBEWQNZgxjjYcsLQIzvIKlUg?e=V0iFQz
+
+Instrucciones:
+1. Descargar el archivo .bak desde el enlace.
+2. Restaurar en SQL Server usando 'Restaurar base de datos'.
