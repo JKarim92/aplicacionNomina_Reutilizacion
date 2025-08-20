@@ -27,7 +27,7 @@ namespace aplicacionNomina.Models
 
         public string clave { get; set; }
 
-        public string id { get; set; }
+        public int id { get; set; }
 
     }
 }

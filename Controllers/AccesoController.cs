@@ -41,19 +41,44 @@ namespace aplicacionNomina.Controllers
             try
             {
                 using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["cnn"].ConnectionString))
+                using (SqlCommand cmd = new SqlCommand("dbo.AutenticarUsuario", cn))
                 {
-                    SqlCommand cmd = new SqlCommand("select * from tbl_employees");
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@usuario", oEmpleado.usuario?.Trim());
+                    cmd.Parameters.AddWithValue("@clave", oEmpleado.clave?.Trim());
+                    cmd.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("@mensaje", SqlDbType.NVarChar, 200).Direction = ParameterDirection.Output;
+
                     cn.Open();
                     cmd.ExecuteNonQuery();
-                    cn.Close();
-                    return RedirectToAction("Index");
+
+                    oEmpleado.id = cmd.Parameters["@id"].Value != DBNull.Value
+                                    ? Convert.ToInt32(cmd.Parameters["@id"].Value)
+                                    : 0;
+
+                    string mensaje = cmd.Parameters["@mensaje"].Value?.ToString() ?? "Sin mensaje";
+
+                    if (oEmpleado.id > 0)
+                    {
+                        return RedirectToAction("Index", "Home"); // login exitoso
+                    }
+                    else
+                    {
+                        // Usuario no encontrado o campos incorrectos
+                        ViewBag.Mensaje = mensaje + " <a href='" + Url.Action("Registro", "Acceso") + "'>Regístrate aquí</a>";
+                        ViewBag.AbrirModal = true; // Indicador para abrir modal
+                        return View("Autenticar");
+                    }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error" + e);
-                return View();
+                ViewBag.Mensaje = "Ocurrió un error al autenticar: " + ex.Message;
+                ViewBag.AbrirModal = true;
+                return View("Autenticar");
             }
         }
+
+
     }
 }
