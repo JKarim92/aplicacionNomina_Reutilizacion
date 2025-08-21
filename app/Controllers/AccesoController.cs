@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
 //Importar libreria para conectar a SQL
 using System.Data;
 using System.Data.SqlClient;
-
 //Importar otras funcionalidades
 using System.Security.Cryptography;
 using System.Configuration;
@@ -19,6 +17,14 @@ namespace aplicacionNomina.Controllers
 {
     public class AccesoController : Controller
     {
+        // Método helper para obtener la connection string procesada
+        private string GetConnectionString()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["cnn"].ConnectionString;
+            string serverName = Environment.GetEnvironmentVariable("SQL_SERVER_NAME") ?? ".";
+            return connectionString.Replace("{SERVER_NAME}", serverName);
+        }
+
         //Metodos Get - Donde obtenemos información
         [HttpGet]
         public ActionResult Autenticar()
@@ -40,7 +46,7 @@ namespace aplicacionNomina.Controllers
         {
             try
             {
-                using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["cnn"].ConnectionString))
+                using (SqlConnection cn = new SqlConnection(GetConnectionString()))
                 using (SqlCommand cmd = new SqlCommand("dbo.AutenticarUsuario", cn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
@@ -48,16 +54,12 @@ namespace aplicacionNomina.Controllers
                     cmd.Parameters.AddWithValue("@clave", oEmpleado.clave?.Trim());
                     cmd.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("@mensaje", SqlDbType.NVarChar, 200).Direction = ParameterDirection.Output;
-
                     cn.Open();
                     cmd.ExecuteNonQuery();
-
                     oEmpleado.id = cmd.Parameters["@id"].Value != DBNull.Value
                                     ? Convert.ToInt32(cmd.Parameters["@id"].Value)
                                     : 0;
-
                     string mensaje = cmd.Parameters["@mensaje"].Value?.ToString() ?? "Sin mensaje";
-
                     if (oEmpleado.id > 0)
                     {
                         return RedirectToAction("Index", "Home"); // login exitoso
@@ -78,7 +80,5 @@ namespace aplicacionNomina.Controllers
                 return View("Autenticar");
             }
         }
-
-
     }
 }
